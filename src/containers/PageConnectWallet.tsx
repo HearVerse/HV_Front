@@ -6,10 +6,8 @@ import ButtonSecondary from "shared/Button/ButtonSecondary";
 import NcImage from "shared/NcImage/NcImage";
 import QrCodeImg from "images/qr-code.png";
 import metamaskImg from "images/metamask.webp";
-import walletconnectImg from "images/walletconnect.webp";
-import walletlinkImg from "images/walletlink.webp";
-import fortmaticImg from "images/fortmatic.webp";
-
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 export interface PageConnectWalletProps {
   className?: string;
 }
@@ -34,35 +32,36 @@ const plans = [
 ];
 const PageConnectWallet: FC<PageConnectWalletProps> = ({ className = "" }) => {
   const [showModal, setShowModal] = useState(false);
-  const [wallet, setWallet] = useState("");
+  // const [wallet, setWallet] = useState("");
+  const wallet = useAccount();
+  
+  // useEffect(() => {
+  //   const getWallet = async () => {
+  //     if (window.ethereum) {
+  //       const res = await window.ethereum.request({
+  //         method: "eth_requestAccounts",
+  //       });
+  //       setWallet(res[0]);
+  //     }
+  //   };
+  //   getWallet();
+  // }, []);
 
-  useEffect(() => {
-    const getWallet = async () => {
-      if (window.ethereum) {
-        const res = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setWallet(res[0]);
-      }
-    };
-    getWallet();
-  }, []);
-
-  const onConnectWallet = () => {
-    if (!wallet) {
-      if (window?.ethereum) {
-        window.ethereum
-          .request({ method: "eth_requestAccounts" })
-          .then((res: any) => {
-            setWallet(res[0]);
-          });
-      } else {
-        alert("Install metamask extension!!");
-      }
-    } else {
-      navigator.clipboard.writeText(wallet);
-    }
-  };
+  // const onConnectWallet = () => {
+  //   if (!wallet) {
+  //     if (window?.ethereum) {
+  //       window.ethereum
+  //         .request({ method: "eth_requestAccounts" })
+  //         .then((res: any) => {
+  //           setWallet(res[0]);
+  //         });
+  //     } else {
+  //       alert("Install metamask extension!!");
+  //     }
+  //   } else {
+  //     navigator.clipboard.writeText(wallet);
+  //   }
+  // };
 
   const renderContent = () => {
     return (
@@ -95,27 +94,34 @@ const PageConnectWallet: FC<PageConnectWalletProps> = ({ className = "" }) => {
         <title>Connect Wallet || Hearverse</title>
       </Helmet>
       <div className="container">
-        {wallet ? (
+        {/* {wallet?.address ? (
           <div className="my-12 sm:lg:my-16 lg:my-24 max-w-3xl mx-auto space-y-8 sm:space-y-10">
             <div className="max-w-2xl">
-              <h2 className="text-3xl sm:text-4xl font-semibold">{wallet}</h2>
+              <h2 className="text-3xl sm:text-4xl font-semibold">{wallet.address}</h2>
             </div>
           </div>
-        ) : (
+        ) : ( */}
           <div className="my-12 sm:lg:my-16 lg:my-24 max-w-3xl mx-auto space-y-8 sm:space-y-10">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl sm:text-4xl font-semibold">
-                Connect your wallet.
-              </h2>
-              <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
-                Connect with one of our available wallet providers or create a
-                new one.
-              </span>
-            </div>
-            <div className="w-full border-b-2 border-neutral-100 dark:border-neutral-700"></div>
+            {
+              !wallet && (
+                <>
+                  <div className="max-w-2xl">
+                    <h2 className="text-3xl sm:text-4xl font-semibold">
+                      Connect your wallet.
+                    </h2>
+                    <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
+                      Connect with one of our available wallet providers or create a
+                      new one.
+                    </span>
+                  </div>
+                  <div className="w-full border-b-2 border-neutral-100 dark:border-neutral-700"></div>
+                </>
+              )
+            }
+            
             <div className="mt-10 md:mt-0 space-y-5 sm:space-y-6 md:sm:space-y-8">
               <div className="space-y-3">
-                {plans.map((plan) => (
+                {/* {plans.map((plan) => (
                   <div
                     key={plan.name}
                     onClick={() => onConnectWallet()}
@@ -138,8 +144,10 @@ const PageConnectWallet: FC<PageConnectWalletProps> = ({ className = "" }) => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))} */}
+                <ConnectButton label="Connect through rainbow wallet"/>
               </div>
+              
 
               {/* ---- */}
               <div className="pt-2 ">
@@ -168,7 +176,7 @@ const PageConnectWallet: FC<PageConnectWalletProps> = ({ className = "" }) => {
               </div>
             </div>
           </div>
-        )}
+        {/* )} */}
       </div>
 
       <NcModal

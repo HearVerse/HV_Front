@@ -6,44 +6,48 @@ import Input from "shared/Input/Input";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Navigation from "shared/Navigation/Navigation";
+import { Ethereum } from "@wagmi/connectors";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export interface MainNav2Props {}
 declare global {
   interface Window{
-    ethereum?:any
+    ethereum?: Ethereum | undefined;
   }
 }
 
 const MainNav2: FC<MainNav2Props> = () => {
-  const [wallet, setWallet] = useState('');
-  
-  useEffect(() => {
-    const getWallet = async () => {
-      if(window.ethereum) {
-        const res = await window.ethereum.request({          
-          method: "eth_requestAccounts",        
-        });        
-        setWallet(res[0])
-      }
-    }
-    getWallet();
+  // const [wallet, setWallet] = useState('');
+  const wallet = useAccount();
 
-  }, []);
+  // useEffect(() => {
+  //   const getWallet = async () => {
+  //     if(window.ethereum) {
+  //       const res = await window.ethereum.request({          
+  //         method: "eth_requestAccounts",        
+  //       });        
+  //       setWallet(res[0])
+  //     }
+  //   }
+  //   getWallet();
 
-  const onConnectWallet = () => {
-    if(!wallet) {
-      if(window?.ethereum){
-        window.ethereum.request({method:'eth_requestAccounts'})
-        .then((res: any)=>{
-          setWallet(res[0])
-        })
-      }else{
-        alert("Install metamask extension!!")
-      }
-    } else {
-      navigator.clipboard.writeText(wallet);
-    }
-  }
+  // }, []);
+
+  // const onConnectWallet = () => {
+  //   if(!wallet) {
+  //     if(window?.ethereum){
+  //       window.ethereum.request({method:'eth_requestAccounts'})
+  //       .then((res: any)=>{
+  //         setWallet(res[0])
+  //       })
+  //     }else{
+  //       alert("Install metamask extension!!")
+  //     }
+  //   } else {
+  //     navigator.clipboard.writeText(wallet);
+  //   }
+  // }
 
   return (
     <div className={`nc-MainNav2 relative z-10 ${"onTop "}`}>
@@ -96,13 +100,14 @@ const MainNav2: FC<MainNav2Props> = () => {
             >
               Create
             </ButtonPrimary>
-            <ButtonSecondary
+            {/* <ButtonSecondary
               // href={"/connect-wallet"}
               sizeClass="px-4 py-2 sm:px-5"
               onClick={() => onConnectWallet()}
             >
               {wallet ? wallet.slice(0, 4)+"..."+wallet.slice(38, 42) : "Connect Wallet"}
-            </ButtonSecondary>
+            </ButtonSecondary> */}
+            <ConnectButton label="Connect through rainbow wallet"/>
           </div>
           <div className="flex items-center space-x-1.5 xl:hidden">
             <ButtonPrimary

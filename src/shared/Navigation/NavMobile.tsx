@@ -11,6 +11,8 @@ import { ChevronDownIcon } from "@heroicons/react/solid";
 import SwitchDarkMode from "shared/SwitchDarkMode/SwitchDarkMode";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import { useSelector } from "react-redux";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export interface NavMobileProps {
   data?: NavItemType[];
@@ -21,7 +23,8 @@ const NavMobile: React.FC<NavMobileProps> = ({
   data = NAVIGATION_DEMO_2,
   onClickClose,
 }) => {
-  const [wallet, setWallet] = useState("");
+  // const [wallet, setWallet] = useState("");
+  const wallet = useAccount();
   const isLoggedIn = useSelector(
     (state: { auth: { isLoggedIn: string } }) => state.auth.isLoggedIn
   );
@@ -121,33 +124,33 @@ const NavMobile: React.FC<NavMobileProps> = ({
     );
   };
 
-  useEffect(() => {
-    const getWallet = async () => {
-      if (window.ethereum) {
-        const res = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setWallet(res[0]);
-      }
-    };
-    getWallet();
-  }, []);
+  // useEffect(() => {
+  //   const getWallet = async () => {
+  //     if (window.ethereum) {
+  //       const res = await window.ethereum.request({
+  //         method: "eth_requestAccounts",
+  //       });
+  //       setWallet(res[0]);
+  //     }
+  //   };
+  //   getWallet();
+  // }, []);
 
-  const onConnectWallet = () => {
-    if (!wallet) {
-      if (window?.ethereum) {
-        window.ethereum
-          .request({ method: "eth_requestAccounts" })
-          .then((res: any) => {
-            setWallet(res[0]);
-          });
-      } else {
-        alert("Install metamask extension!!");
-      }
-    } else {
-      navigator.clipboard.writeText(wallet);
-    }
-  };
+  // const onConnectWallet = () => {
+  //   if (!wallet) {
+  //     if (window?.ethereum) {
+  //       window.ethereum
+  //         .request({ method: "eth_requestAccounts" })
+  //         .then((res: any) => {
+  //           setWallet(res[0]);
+  //         });
+  //     } else {
+  //       alert("Install metamask extension!!");
+  //     }
+  //   } else {
+  //     navigator.clipboard.writeText(wallet);
+  //   }
+  // };
 
   return (
     <div className="overflow-y-auto w-full max-w-sm h-screen py-2 transition transform shadow-lg ring-1 dark:ring-neutral-700 bg-white dark:bg-neutral-900 divide-y-2 divide-neutral-100 dark:divide-neutral-800">
@@ -178,11 +181,12 @@ const NavMobile: React.FC<NavMobileProps> = ({
           <ButtonPrimary href={"/page-upload-item"} className="!px-10">
             Create
           </ButtonPrimary>
-          <ButtonSecondary className="flex-1" onClick={() => onConnectWallet()}>
+          {/* <ButtonSecondary className="flex-1" onClick={() => onConnectWallet()}>
             {wallet
               ? wallet.slice(0, 5) + "..." + wallet.slice(38, 42)
               : "Connect Wallet"}
-          </ButtonSecondary>
+          </ButtonSecondary> */}
+          <ConnectButton label="Connect through rainbow wallet"/>
         </div>
       ) : (
         <div className="flex items-center justify-between py-6 px-5 space-x-2">
